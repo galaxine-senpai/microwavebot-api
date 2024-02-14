@@ -31,8 +31,7 @@ app.get("/meow", (req, res) => {
 app.get("/uptime", (req, res) => {
   const uptime = process.uptime();
   const formattedUptime = new Date(uptime * 1000).toISOString().slice(11, 19);
-  const unixUptime = Math.floor(uptime);
-  res.json({ numeraluptime: formattedUptime, unixuptime: unixUptime });
+  res.json({ numeraluptime: formattedUptime });
 });
 
 // On 404 use the error handler
