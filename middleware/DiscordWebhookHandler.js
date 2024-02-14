@@ -3,7 +3,7 @@ const { LoadLogger } = require("./StartupLogging.js");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const webhook = new WebhookClient({ url: process.env.WEBHOOK_URL });
+const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN});
 
 const testEmbed = new EmbedBuilder()
   .setTitle("Test")
