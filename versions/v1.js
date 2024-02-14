@@ -5,10 +5,19 @@ var cookieParser = require('cookie-parser')
 router.use(express.json());
 router.use(cookieParser());
 
+// Function to auto fill the apikey query if the apikey cookie is present
+router.use((req, res, next) => {
+  if (req.cookies.apikey) {
+    req.query.apikey = req.cookies.apikey;
+  }
+  next();
+});
+
 router.get("/", (req, res) => {
   res.set("Content-Type", "application/json");
+  const token = req.cookies.apikey;
   if (req.cookies.registered === "true") {
-    res.json({ APIVersion: "v1", status: "registered", availEndpoints : {
+    res.json({ APIVersion: "v1", status: "registered", key: token, availEndpoints : {
       "/users/?id=" : "Get user data *API KEY REQUIRED*"
     } });
   } else {
@@ -36,13 +45,16 @@ router.get("/users/", (req, res) => {
 });
 
 router.get("/register/", (req, res) => {
-  const { generateAndAddKey } = require("../middleware/KeyGen.js");
+  const KeyGen = require("../middleware/KeyGen.js");
 
   // Check for the "registered" cookie
   if (!req.cookies.registered) {
     // Generate token value false
     res.cookie("registered", "false", { maxAge: Date.now() + 2 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
 
+  }
+  if (!req.cookies.apikey) {
+    res.cookie("apikey", "false", { maxAge: Date.now() + 2 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
   }
   if (req.cookies.registered) {
     // check if cookie true
@@ -63,9 +75,10 @@ router.get("/register/", (req, res) => {
   const { validTokens } = require("../data/tokens.json");
 
   if (validTokens.includes(token)) {
-    const genToken = generateAndAddKey(10);
+    const genToken = KeyGen(10);
     // set a cookie to prevent the user from registering again
     res.cookie("registered", "true", { maxAge: Date.now() + 2 * 365 *24 * 60 * 60 * 1000, httpOnly: true });
+    res.cookie("apikey", genToken, { maxAge: Date.now() + 2 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
     res.json({ status: "Key generated", token: genToken });
   }
 
@@ -88,7 +101,11 @@ router.get("/keys/", (req, res, next) => {
   // Check if apikeys.adminkeys includes the apikey
   if (apikeys.adminkeys.includes(req.query.apikey)) {
     const keys = require("../data/apikeys.json");
-    res.json(keys);
+    var validData = {
+      keys:
+        keys.keys
+    }
+    res.json(validData);
   } else {
     res.status(403).json({ status: "403", error: "Forbidden" });
   }

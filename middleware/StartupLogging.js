@@ -11,6 +11,8 @@ function LoadLogger(type, name) {
     console.log(`${red}[MIDDLEWARE]${reset} ${name} loaded`);
   } else if (typelc === "router") {
     console.log(`${green}[ROUTER]${reset} /${name}/ loaded`);
+  } else if (type === "server") {
+    console.log(`${green}[SERVER]${reset} Server running on http://localhost:${name}`);
   } else {
     console.log(`${red}[ERROR]${reset} Invalid type ${type}`);
   }

@@ -16,6 +16,9 @@ function generateAndAddKey(length) {
     return key;
 }
 
+const { LoadLogger } = require("./StartupLogging.js");
+LoadLogger("middleware", "KeyGen");
 
 
-module.exports = { generateAndAddKey }
+
+module.exports = generateAndAddKey

@@ -18,9 +18,12 @@
   "homepage": "https://github.com/microwave-inc/microwave-api#readme",
   "dependencies": {
     "cookie-parser": "^1.4.6",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.3",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "moment": "^2.30.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "os": "^0.1.2"
   }
 }

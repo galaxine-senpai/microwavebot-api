@@ -1,9 +1,8 @@
 const morgan = require("morgan");
 const moment = require("moment");
 
-function onLoad() {
-  console.log(`\x1b[31m[MIDDLEWARE]\x1b[0m Morgan logging loaded`);
-}
+const { LoadLogger } = require("./StartupLogging.js");
+
 
 // - - - Morgan Logging - - -
 
@@ -27,6 +26,6 @@ const MorganLogging = morgan((tokens, req, res) => {
   return `${tokens.date(req, res)} | [${method}] ${url} | ${ip} | Status: ${status}`;
 });
 
-onLoad();
+LoadLogger("middleware", "MorganLogging");
 
 module.exports = MorganLogging;
